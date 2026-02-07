@@ -99,6 +99,9 @@ Convert all profile data into high-dimensional vector representations for fast s
 
 ## Python Implementation
 
+<details>
+<summary>🐍 Phase 1: Python Implementation (Click to Expand)</summary>
+
 ```python
 import json
 from sentence_transformers import SentenceTransformer
@@ -191,6 +194,7 @@ user_ids = [p['user_id'] for p in profiles]
 with open('user_ids.json', 'w') as f:
     json.dump(user_ids, f)
 ```
+</details>
 
 ## Output Files
 | File | Description |
@@ -244,6 +248,9 @@ Total queries: 4,500 × ~11 queries per profile set = 50,000+ queries
 | **Easy** | Single attribute match | "Developer in Bangalore" |
 | **Medium** | Multiple attribute match | "Senior Python Developer with ML experience" |
 | **Hard** | Complex semantic understanding | "High-energy person who loves hiking and can lead tech teams" |
+
+<details>
+<summary>🐍 Phase 2: Python Implementation (Click to Expand)</summary>
 
 ```python
 import json
@@ -341,8 +348,12 @@ else:
 
 # Total batches needed: 45000 / 10 = 4500 batches
 ```
+</details>
 
 ## AI Prompt Template (Query Generation)
+
+<details>
+<summary>🤖 Phase 2: AI Prompt Template (Click to Expand)</summary>
 
 ```
 You are a Search Query Generator for a professional discovery platform.
@@ -453,6 +464,7 @@ Return an array of 11 queries in this format:
   {"query": "<query 11>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"}
 ]
 ```
+</details>
 
 ## Output Format Example
 
@@ -489,6 +501,9 @@ For each generated query, retrieve the 50 most semantically similar profiles fro
 4. Return top 50 candidates ranked by similarity
 
 ## Python Implementation
+
+<details>
+<summary>🐍 Phase 3: Python Implementation (Click to Expand)</summary>
 
 ```python
 import json
@@ -534,6 +549,7 @@ for r in results[:5]:
     p = r['profile']
     print(f"  {r['rank']}. {r['user_id']} | {p['professional_identity']['occupation']}")
 ```
+</details>
 
 ## Performance
 - **Latency:** 50-100ms per query
@@ -568,6 +584,9 @@ Apply human-quality reasoning to rank candidate profiles and generate relevance 
 
 ## AI Prompt Template
 
+<details>
+<summary>🤖 Phase 4: AI Prompt Template (Click to Expand)</summary>
+
 ```
 You are a search quality evaluator.
 
@@ -599,6 +618,7 @@ Output JSON format:
   "notes": "..."
 }
 ```
+</details>
 
 ## Output Format
 
