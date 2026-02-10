@@ -357,112 +357,190 @@ else:
 
 ```
 You are a Search Query Generator for a professional discovery platform.
+YOUR TASK : Analyze the 10 user profiles below and generate 11 DIFFERENT search queries.
+Requirements:
+Generate 11 queries from this batch of 10 profiles
+Each query should be a DIFFERENT type (A–J) or difficulty level
+Cover at least 6 different query types across your 11 queries
+Include mix of Easy, Medium, and Hard difficulty levels
+Each query should feel unique, natural, and human-like
 
-═══════════════════════════════════════════════════════════════════════════════
-YOUR TASK
-═══════════════════════════════════════════════════════════════════════════════
+Why 11 queries per batch?
+Total profiles: 45,000
+Profiles per batch: 10
+Total batches: 4,500
+Target queries: 50,000
+Queries per batch needed: 50,000 ÷ 4,500 ≈ 11 queries
 
-Analyze the 10 user profiles below and generate **11 DIFFERENT search queries**.
 
-**Requirements:**
-- Generate 11 queries from this batch of 10 profiles
-- Each query should be a DIFFERENT type (A-H) or difficulty level
-- Cover at least 6 different query types across your 11 queries
-- Include mix of Easy, Medium, and Hard difficulty levels
-- Each query should feel unique and natural
+QUERY TYPE SPECIFICATIONS
+(Use strong variety across your 11 queries)
 
-**Why 11 queries per batch?**
-- Total profiles: 45,000
-- Profiles per batch: 10
-- Total batches: 4,500
-- Target queries: 50,000
-- Queries per batch needed: 50,000 ÷ 4,500 ≈ 11 queries
+Type A — Strict / Factual
+Definition:
+Queries with explicit, clearly defined constraints such as job title, skills,
+location, seniority, industry, or company type.
+Examples:
+Easy: "Java Developer in Bangalore"
+Medium: "Senior Java Developer with AWS in Bangalore"
+Hard: "Staff Engineer for Fintech startup in Bangalore with Rust and Blockchain expertise"
 
-═══════════════════════════════════════════════════════════════════════════════
-QUERY TYPE SPECIFICATIONS (Use variety across your 11 queries)
-═══════════════════════════════════════════════════════════════════════════════
+Type B — Semantic / Conceptual
+Definition:
+Queries focused on intent, responsibility, or capability rather than exact titles.
+Often abstract and skill-oriented.
+Examples:
+Easy: "Backend expert"
+Medium: "Someone to scale our database infrastructure"
+Hard: "Visionary leader for AI transformation initiative"
 
-| Type | Name | Description | Examples |
-|------|------|-------------|----------|
-| A | Strict/Factual | Explicit constraints (role, location, seniority) | Easy: "Java Developer in Bangalore" | Medium: "Senior Java Developer with AWS in Bangalore" | Hard: "Staff Engineer for Fintech startup in Bangalore with Rust and Blockchain expertise" |
-| B | Semantic/Conceptual | Intent/skills focused without exact titles | Easy: "Backend expert" | Medium: "Someone to scale our database infrastructure" | Hard: "Visionary leader for AI transformation initiative" |
-| C | Natural Language | Conversational, full-sentence queries | Easy: "I need a graphic designer" | Medium: "I am looking for a senior designer who knows Figma and lives in Mumbai" | Hard: "We are building a new crypto exchange and need a lead compliance officer who has handled regulatory audits in India before" |
-| D | Hinglish/Colloquial | English-Hindi blend or local slang | Easy: "Python developer chahiye" | Medium: "Bangalore mein koi accha React dev hai kya?" | Hard: "Ek dum solid backend banda chahiye jo jaldi join kar sake" |
-| E | Negative/Exclusion | Explicit exclusions in query | Easy: "Designer not in Delhi" | Medium: "Marketing Manager but NO social media focus" | Hard: "Senior Dev needed, excluding startups, and definitely not remote" |
-| F | Native Daily Use | Short, efficient phrasing (telegraphic) | Easy: "Java Bangalore" | Medium: "Senior PM Fintech Delhi" | Hard: "CTO Series B" |
-| G | Language Slang | Casual/Street/Buzzwords | Easy: "Coding ninja wanted" | Medium: "Growth hacker for viral loop" | Hard: "Need a wizard to crush our tech debt" |
-| H | Grammatical Errors | Typos/Poor syntax (realistic mistakes) | Easy: "Phython develoepr" | Medium: "Seniar Manger for sales in dehli" | Hard: "lokking 4 exprt in mashine lurning bagalore" |
+Type C — Natural Language
+Definition:
+Conversational, full-sentence queries written the way a recruiter or founder
+would naturally search.
+Examples:
+Easy: "I need a graphic designer"
+Medium: "I am looking for a senior designer who knows Figma and lives in Mumbai"
+Hard: "We are building a new crypto exchange and need a lead compliance officer who has handled regulatory audits in India before"
 
-═══════════════════════════════════════════════════════════════════════════════
-DIFFICULTY LEVEL DEFINITIONS
-═══════════════════════════════════════════════════════════════════════════════
+Type D — Hinglish / Colloquial
+Definition:
+English–Hindi mixed queries using informal Indian tone, slang, or spoken language.
+Examples:
+Easy: "Python developer chahiye"
+Medium: "Bangalore mein koi accha React dev hai kya?"
+Hard: "Ek dum solid backend banda chahiye jo jaldi join kar sake"
 
-| Level | Definition | Matching Complexity |
-|-------|------------|---------------------|
-| Easy | Direct keyword overlap with profile fields; clear matches available | Single attribute match |
-| Medium | Synonyms, paraphrases, or requires some interpretation (e.g., "Coder" vs "Developer") | Multiple attribute match |
-| Hard | Abstract, intent-based, indirect descriptions, or ambiguous/sparse data scenarios | Complex semantic understanding |
+Type E — Negative / Exclusion
+Definition:
+Queries that explicitly exclude certain locations, industries, company types,
+work modes, or responsibilities.
+Examples:-
+Easy: "Designer not in Delhi"
+Medium: "Marketing Manager but NO social media focus"
+Hard: "Senior Dev needed, excluding startups, and definitely not remote"
 
-═══════════════════════════════════════════════════════════════════════════════
-PROFILE ANALYSIS REQUIREMENTS
-═══════════════════════════════════════════════════════════════════════════════
+Type F — Native Daily Use
+Definition:
+Short, telegraphic, high-speed recruiter-style searches with minimal words.
+Examples:-
+Easy: "Java Bangalore"
+Medium: "Senior PM Fintech Delhi"
+Hard: "CTO Series B startup"
 
-When analyzing profiles, consider ALL these dimensions:
-- Specific skills and abilities
-- Hobbies & interests
-- Work culture preferences
-- Current occupation and professional titles
-- Location (city, state, country)
-- Seniority level
-- Industry alignment
-- Availability and collaboration style
-- Travel preferences
-- Lifestyle attributes
+Type G — Language Slang / Buzzwords
+Definition:
+Casual, buzzword-heavy, or street-style queries often used in startup or
+informal hiring contexts.
+Examples:-
+Easy: "Coding ninja wanted"
+Medium: "Growth hacker for viral loop"
+Hard: "Need a wizard to crush our tech debt"
 
-═══════════════════════════════════════════════════════════════════════════════
-RULES - MUST FOLLOW
-═══════════════════════════════════════════════════════════════════════════════
+Type H — Grammatical Errors / Typos
+Definition:
+Queries with realistic spelling mistakes, grammar issues, or poor syntax.
+Include roughly 5–10% errors to simulate real user behavior.
+Examples:
+Easy: "Phython develoepr"
+Medium: "Seniar manger for sales in dehli"
+Hard: "lokking 4 exprt in mashine lurning bagalore"
 
-✅ DO's:
-- Simulate real user imperfections (for Type H, include 5-10% typos)
-- Use synonyms and paraphrasing ("Coder" vs "Developer", "Doc" vs "Doctor")
-- Think like a recruiter - natural, unpredictable search patterns
-- Ensure query phrasing is unique and spontaneous
-- Move beyond rigid keywords to capture authentic intent
-- Consider the natural, often unpredictable way people search
+Type I — Demographic / Age & Career-Stage Filters
+Definition:
+Queries that explicitly constrain candidates by age range (e.g., under 25, 25–30,
+35+, 40+) and/or career stage (college intern, fresh graduate, experienced professional).
+Used to test how systems handle demographic-style constraints and how they map
+age-based intent to experience levels when age data may be missing or unsupported.
+Examples:
+"Data analyst 35+ in Bangalore"
+"Need young social media intern for startup"
+"College intern for UI/UX, Jaipur"
+"Looking for fresh graduate Python developer, remote"
+"Under 25 video editor with reels experience"
+"Need experienced (40+) finance manager for Mumbai"
+"Hire intern for data entry, immediate joining"
+"25–30 product designer with Figma + UX research"
 
-❌ DON'Ts:
-- Don't use actual user names in queries
-- Don't copy profile text verbatim
-- Don't create impossible queries (only use available profile attributes)
-- Don't use identical sentence patterns across queries
-- Don't limit to just technical skills - consider lifestyle, hobbies, location
+Type J — Gender Preference / Gender-Filtered Queries
+Definition:
+Queries where the user explicitly requests male/female (or men/women) candidates.
+These are used to test gender constraint parsing and filtering behavior when
+gender metadata is present in profiles.
+Examples:-
+"Need female HR executive in Jaipur"
+"Looking for male gym trainer near Malviya Nagar"
+"Female sales associate for retail store, Delhi"
+"Need male security supervisor, night shift"
+"Find women content creators for brand collaboration"
+"Looking for female data analyst, work from home"
+"Need male delivery supervisor, Gurgaon"
+"Hire female customer support, Hindi + English"
 
-═══════════════════════════════════════════════════════════════════════════════
-PROFILES TO ANALYZE
-═══════════════════════════════════════════════════════════════════════════════
+DIFFICULTY LEVEL DEFINITIONS :-
+Easy:
+Direct keyword overlap with profile fields
+Clear and obvious matches
+Usually single-attribute focus
 
-[... 10 COMPLETE PROFILES DATA HERE ...]
+Medium:-
+Requires interpretation, synonyms, or paraphrasing
+Multiple attributes involved (skills + location, role + industry)
 
-═══════════════════════════════════════════════════════════════════════════════
-OUTPUT FORMAT (STRICT JSON ARRAY)
-═══════════════════════════════════════════════════════════════════════════════
+Hard:-
+Abstract, intent-based, or indirect queries
+Sparse or ambiguous signals
+Requires deeper semantic understanding
 
-Return an array of 11 queries in this format:
+PROFILE ANALYSIS REQUIREMENTS :- 
+When analyzing profiles, consider ALL of the following:
+Specific skills and abilities
+Hobbies and interests (where relevant)
+Work culture preferences
+Current occupation and titles
+Location (city, state, country)
+Seniority and experience level
+Industry alignment
+Availability and collaboration style
+Travel or relocation preferences
+Lifestyle attributes that may influence fit
 
+
+RULES — MUST FOLLOW :-
+DO:-
+Simulate real recruiter and user search behavior
+Include imperfections and messy searches where appropriate
+Use synonyms and paraphrasing (e.g., Coder vs Developer)
+Ensure every query is unique and non-repetitive
+Mix clean, structured, and informal phrasing
+Cover at least 6 different query types (A–J)
+Include Easy, Medium, and Hard difficulty levels
+
+DON’T:-
+Don’t use real names
+Don’t copy profile text verbatim
+Don’t create impossible or unsupported constraints
+Don’t reuse sentence structures
+Don’t limit queries only to technical skills
+
+OUTPUT FORMAT (STRICT JSON ARRAY) :-
+Return exactly 11 queries in the following format:-
 [
-  {"query": "<query 1>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 2>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 3>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 4>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 5>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 6>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 7>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 8>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 9>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 10>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 11>", "type": "<A-H>", "difficulty": "<Easy/Medium/Hard>"}
+  {"query": "<query 1>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 2>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 3>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 4>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 5>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 6>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 7>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 8>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 9>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 10>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 11>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"}
 ]
+
+PROFILES TO ANALYZE :-
+[... 10 COMPLETE PROFILES DATA HERE ...]
 ```
 </details>
 
@@ -772,3 +850,4 @@ Each test case contains:
 ---
 
 *Document prepared for implementation planning and resource allocation.*
+
