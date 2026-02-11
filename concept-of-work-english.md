@@ -225,15 +225,15 @@ else:
 
 ```
 You are a Search Query Generator for a professional discovery platform.
-YOUR TASK : Analyze the 10 user profiles below and generate 11 DIFFERENT search queries.
+YOUR TASK : Analyze the 10 user profiles below and generate 14 DIFFERENT search queries.
 Requirements:
-Generate 11 queries from this batch of 10 profiles
+Generate 14 queries from this batch of 10 profiles
 Each query should be a DIFFERENT type (A–J) or difficulty level
-Cover at least 6 different query types across your 11 queries
+Cover at least 8 different query types across your 14 queries
 Include mix of Easy, Medium, and Hard difficulty levels
 Each query should feel unique, natural, and human-like
 
-Why 11 queries per batch?
+Why 14 queries per batch?
 Total profiles: 45,000
 Profiles per batch: 10
 Total batches: 4,500
@@ -381,7 +381,7 @@ Include imperfections and messy searches where appropriate
 Use synonyms and paraphrasing (e.g., Coder vs Developer)
 Ensure every query is unique and non-repetitive
 Mix clean, structured, and informal phrasing
-Cover at least 6 different query types (A–J)
+Cover at least 8 different query types (A–J)
 Include Easy, Medium, and Hard difficulty levels
 
 DON'T:-
@@ -392,7 +392,7 @@ Don't reuse sentence structures
 Don't limit queries only to technical skills
 
 OUTPUT FORMAT (STRICT JSON ARRAY) :-
-Return exactly 11 queries in the following format:-
+Return exactly 14 queries in the following format:-
 [
   {"query": "<query 1>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
   {"query": "<query 2>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
@@ -404,7 +404,10 @@ Return exactly 11 queries in the following format:-
   {"query": "<query 8>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
   {"query": "<query 9>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
   {"query": "<query 10>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
-  {"query": "<query 11>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"}
+  {"query": "<query 11>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 12>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 13>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"},
+  {"query": "<query 14>", "type": "<A–J>", "difficulty": "<Easy/Medium/Hard>"}
 ]
 
 PROFILES TO ANALYZE :-
@@ -424,13 +427,16 @@ PROFILES TO ANALYZE :-
   {"query": "Senior PM Fintech Delhi", "type": "F", "difficulty": "Medium"},
   {"query": "Growth hacker for viral loop", "type": "G", "difficulty": "Medium"},
   {"query": "Seniar Manger for sales in dehli", "type": "H", "difficulty": "Medium"},
+  {"query": "Data analyst 35+ in Bangalore", "type": "I", "difficulty": "Easy"},
+  {"query": "Need female HR executive in Jaipur", "type": "J", "difficulty": "Easy"},
   {"query": "Staff Engineer Rust Blockchain Fintech", "type": "A", "difficulty": "Hard"},
   {"query": "Backend expert", "type": "B", "difficulty": "Easy"},
-  {"query": "Python developer chahiye", "type": "D", "difficulty": "Easy"}
+  {"query": "Python developer chahiye", "type": "D", "difficulty": "Easy"},
+  {"query": "Under 25 video editor with reels experience", "type": "I", "difficulty": "Hard"}
 ]
 ```
 
-**Collected Output File:** `generated_queries.json` (Array of all 50,000+ queries)
+**Collected Output File:** `generated_queries.json` (Array of all 63,000+ queries)
 
 ---
 
