@@ -7,14 +7,14 @@
 
 ## Goal
 
-Generate **50,000+ test cases** with realistic search queries and ranked results to evaluate search algorithm performance.
+Generate **63,000+ test cases** with realistic search queries and ranked results to evaluate search algorithm performance.
 
-### Why 50,000 Queries?
+### Why 63,000 Queries?
 
 **Calculation:**
 ```
-8 Query Types (A-H) × 3 Difficulty Levels (Easy/Medium/Hard) = 24 unique combinations
-24 combinations × ~2,100 queries each = 50,400 queries
+10 Query Types (A-J) × 3 Difficulty Levels (Easy/Medium/Hard) = 30 unique combinations
+30 combinations × ~2,100 queries each = 63,000 queries
 ```
 
 **Distribution Table:**
@@ -29,7 +29,9 @@ Generate **50,000+ test cases** with realistic search queries and ranked results
 | **F** (Short Form) | 2,100 | 2,100 | 2,100 | 6,300 |
 | **G** (Colloquial/Slang) | 2,100 | 2,100 | 2,100 | 6,300 |
 | **H** (Typographical Errors) | 2,100 | 2,100 | 2,100 | 6,300 |
-| **TOTAL** | **16,800** | **16,800** | **16,800** | **50,400** |
+| **I** (Demographic/Age Filter) | 2,100 | 2,100 | 2,100 | 6,300 |
+| **J** (Gender Preference) | 2,100 | 2,100 | 2,100 | 6,300 |
+| **TOTAL** | **21,000** | **21,000** | **21,000** | **63,000** |
 
 **Why this distribution is optimal:**
 - Each type-difficulty combination has 2,100+ samples (statistically significant)
@@ -88,8 +90,8 @@ Generate diverse, realistic search queries that represent actual user search beh
 Total Profiles: 45,000
 Profiles per batch: 10
 Iterations to cover all profiles: 45,000 ÷ 10 = 4,500 iterations
-Query types × Difficulty levels: 8 × 3 = 24 variations
-Total queries: 4,500 × ~11 queries per profile set = 50,000+ queries
+Query types × Difficulty levels: 10 × 3 = 30 variations
+Total queries: 4,500 × ~14 queries per profile set = 63,000+ queries
 ```
 
 ## Query Type Classification
@@ -104,6 +106,8 @@ Total queries: 4,500 × ~11 queries per profile set = 50,000+ queries
 | **F** | Short Form | Abbreviated queries | "Python Mumbai" |
 | **G** | Colloquial/Slang | Informal language | "Coding ninja wanted" |
 | **H** | Typographical Errors | Misspelled queries | "Phython develoepr" |
+| **I** | Demographic/Age Filter | Age/career-stage constraints | "Data analyst 35+ in Bangalore" |
+| **J** | Gender Preference | Gender-filtered queries | "Need female HR executive in Jaipur" |
 
 ## Difficulty Level Classification
 
@@ -112,6 +116,9 @@ Total queries: 4,500 × ~11 queries per profile set = 50,000+ queries
 | **Easy** | Single attribute match | "Developer in Bangalore" |
 | **Medium** | Multiple attribute match | "Senior Python Developer with ML experience" |
 | **Hard** | Complex semantic understanding | "High-energy person who loves hiking and can lead tech teams" |
+
+<details>
+<summary>🐍 Phase 1: Python Implementation (Click to Expand)</summary>
 
 ```python
 import json
@@ -209,8 +216,12 @@ else:
 
 # Total batches needed: 45000 / 10 = 4500 batches
 ```
+</details>
 
 ## AI Prompt Template (Query Generation)
+
+<details>
+<summary>🤖 Phase 1: AI Prompt Template (Click to Expand)</summary>
 
 ```
 You are a Search Query Generator for a professional discovery platform.
@@ -226,8 +237,8 @@ Why 11 queries per batch?
 Total profiles: 45,000
 Profiles per batch: 10
 Total batches: 4,500
-Target queries: 50,000
-Queries per batch needed: 50,000 ÷ 4,500 ≈ 11 queries
+Target queries: 63,000
+Queries per batch needed: 63,000 ÷ 4,500 ≈ 14 queries
 
 
 QUERY TYPE SPECIFICATIONS
@@ -399,6 +410,7 @@ Return exactly 11 queries in the following format:-
 PROFILES TO ANALYZE :-
 [... 10 COMPLETE PROFILES DATA HERE ...]
 ```
+</details>
 
 ## Output Format Example
 
@@ -451,6 +463,9 @@ Convert all profile data into high-dimensional vector representations for fast s
 6. Save index and mappings to disk
 
 ## Python Implementation
+
+<details>
+<summary>🐍 Phase 2: Python Implementation (Click to Expand)</summary>
 
 ```python
 import json
@@ -544,6 +559,7 @@ user_ids = [p['user_id'] for p in profiles]
 with open('user_ids.json', 'w') as f:
     json.dump(user_ids, f)
 ```
+</details>
 
 ## Output Files
 | File | Description |
@@ -567,6 +583,9 @@ For each generated query, retrieve the 50 most semantically similar profiles fro
 4. Return top 50 candidates ranked by similarity
 
 ## Python Implementation
+
+<details>
+<summary>🐍 Phase 3: Python Implementation (Click to Expand)</summary>
 
 ```python
 import json
@@ -612,6 +631,7 @@ for r in results[:5]:
     p = r['profile']
     print(f"  {r['rank']}. {r['user_id']} | {p['professional_identity']['occupation']}")
 ```
+</details>
 
 ## Performance
 - **Latency:** 50-100ms per query
@@ -646,6 +666,9 @@ Apply human-quality reasoning to rank candidate profiles and generate relevance 
 
 ## AI Prompt Template
 
+<details>
+<summary>🤖 Phase 4: AI Prompt Template (Click to Expand)</summary>
+
 ```
 You are a search quality evaluator.
 
@@ -677,6 +700,7 @@ Output JSON format:
   "notes": "..."
 }
 ```
+</details>
 
 ## Output Format
 
@@ -775,7 +799,7 @@ This project involves processing **45,000 complex JSON profiles** (135 MB raw da
 | Phase | Duration | RAM Needed | CPU Needed |
 |-------|----------|------------|------------|
 | Phase 2 (Embeddings) | 4-8 hours | 15-20 GB | 100% |
-| Phase 3 (Search × 50k) | 2-4 hours | 8-10 GB | 80-100% |
+| Phase 3 (Search × 63k) | 2-4 hours | 8-10 GB | 80-100% |
 | Phase 1 & 4 (AI Ranking) | 2-3 weeks | 8-10 GB | 50-70% |
 | **Total Continuous** | **3-4 weeks** | **8-20 GB** | **High** |
 
@@ -799,7 +823,7 @@ For reliable, timely execution, **dedicated server infrastructure** is required:
 
 | Phase | Duration | Notes |
 |-------|----------|-------|
-| Phase 1 | 2-3 weeks | AI query generation (50k+ queries) |
+| Phase 1 | 2-3 weeks | AI query generation (63k+ queries) |
 | Phase 2 | 4-6 hours | One-time vector database setup |
 | Phase 3-4 | 1-2 weeks | Retrieval + ranking |
 | **Total** | **3-4 weeks** | Depends on infrastructure and API limits |
@@ -807,7 +831,7 @@ For reliable, timely execution, **dedicated server infrastructure** is required:
 ---
 
 ## Deliverables
-**Target:** 50,000+ test cases
+**Target:** 63,000+ test cases
 
 ```json
 {
