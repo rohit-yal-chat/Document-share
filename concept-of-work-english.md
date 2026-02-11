@@ -43,15 +43,15 @@ Generate **50,000+ test cases** with realistic search queries and ranked results
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  PHASE 1: Vector Database Creation                              │
-│  Convert all 45,000 profiles into searchable vector embeddings  │
-│  (One-time setup - Python script)                               │
+│  PHASE 1: Query Generation                                      │
+│  10 random profiles → AI generates realistic query → save JSON  │
+│  (Repeat 50,000+ times)                                         │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  PHASE 2: Query Generation                                      │
-│  10 random profiles → AI generates realistic query → save JSON  │
-│  (Repeat 50,000+ times)                                         │
+│  PHASE 2: Vector Database Creation                              │
+│  Convert all 45,000 profiles into searchable vector embeddings  │
+│  (One-time setup - Python script)                               │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
@@ -69,143 +69,7 @@ Generate **50,000+ test cases** with realistic search queries and ranked results
 
 ---
 
-# Phase 1: Vector Database Creation
-
-## Purpose
-Convert all profile data into high-dimensional vector representations for fast semantic similarity search.
-
-## Technology Stack
-- **Embedding Model:** Sentence Transformers (all-MiniLM-L6-v2)
-- **Vector Database:** FAISS (Facebook AI Similarity Search)
-- **Language:** Python
-
-## Process
-
-1. Load all 45,000 profiles from JSON
-2. Extract all searchable fields from each profile:
-   - Personal info (name, gender, age, languages)
-   - Location (city, state, country)
-   - Professional identity (occupation, industry, seniority, titles)
-   - Expertise (skills, abilities, knowledge domains)
-   - Work environment (activities, context)
-   - Availability (engagement status, collaboration style)
-   - Lifestyle (travel style, social vibe)
-   - Interests (hobbies, learning goals)
-   - Semantic summary and tags
-3. Concatenate all fields into searchable text
-4. Generate 384-dimensional embedding vector for each profile
-5. Build FAISS index for efficient similarity search
-6. Save index and mappings to disk
-
-## Python Implementation
-
-<details>
-<summary>🐍 Phase 1: Python Implementation (Click to Expand)</summary>
-
-```python
-import json
-from sentence_transformers import SentenceTransformer
-import faiss
-import numpy as np
-from tqdm import tqdm
-
-# Load profiles
-with open('SyntheticProfilesPersona_Discovery_45k_profiles.json', 'r', encoding='utf-8') as f:
-    profiles = json.load(f)
-
-# Load embedding model
-model = SentenceTransformer('all-MiniLM-L6-v2')
-
-def profile_to_text(p):
-    """Extract all searchable fields from profile"""
-    parts = []
-    
-    # Personal Info
-    pii = p.get('pii', {})
-    parts.append(pii.get('name', ''))
-    parts.append(pii.get('gender', ''))
-    location = pii.get('location', {})
-    parts.extend([location.get('city', ''), location.get('state', ''), 
-                  location.get('neighborhood', ''), location.get('country', '')])
-    
-    # Demographics
-    demo = p.get('demographics', {})
-    parts.append(str(demo.get('age', '')))
-    parts.extend(demo.get('languages', []))
-    
-    # Professional Identity
-    prof = p.get('professional_identity', {})
-    parts.append(prof.get('occupation', ''))
-    parts.extend(prof.get('professional_titles', []))
-    parts.extend(prof.get('alternate_titles', []))
-    parts.append(prof.get('industry', ''))
-    parts.append(prof.get('seniority', ''))
-    parts.append(prof.get('mission_statement', ''))
-    
-    # Expertise
-    exp = p.get('expertise_taxonomy', {})
-    parts.extend(exp.get('skills', []))
-    parts.extend(exp.get('abilities', []))
-    parts.extend(exp.get('knowledge_domains', []))
-    parts.extend(exp.get('related_occupations', []))
-    
-    # Work Environment
-    work = p.get('work_environment_context', {})
-    parts.extend(work.get('work_activities', []))
-    parts.extend(work.get('work_context', []))
-    
-    # Discovery Intent
-    disc = p.get('discovery_intent', {})
-    parts.append(disc.get('engagement_status', ''))
-    parts.append(disc.get('availability_pattern', ''))
-    parts.append(disc.get('collaboration_style', ''))
-    
-    # Lifestyle
-    life = p.get('lifestyle', {})
-    parts.append(life.get('travel_style', ''))
-    parts.append(life.get('social_vibe', ''))
-    
-    # Interests
-    interests = p.get('interests', {})
-    parts.extend(interests.get('hobbies', []))
-    parts.extend(interests.get('learning_goals', []))
-    
-    # Search Optimization
-    search = p.get('search_optimization', {})
-    parts.append(search.get('semantic_summary', ''))
-    parts.extend([tag.replace('#', '') for tag in search.get('tags', [])])
-    
-    return ' '.join([str(x) for x in parts if x])
-
-# Create embeddings
-profile_texts = [profile_to_text(p) for p in tqdm(profiles)]
-embeddings = model.encode(profile_texts, show_progress_bar=True)
-
-# Build FAISS index
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-index.add(embeddings.astype('float32'))
-
-# Save outputs
-faiss.write_index(index, 'profiles_index.faiss')
-np.save('embeddings.npy', embeddings)
-
-user_ids = [p['user_id'] for p in profiles]
-with open('user_ids.json', 'w') as f:
-    json.dump(user_ids, f)
-```
-</details>
-
-## Output Files
-| File | Description |
-|------|-------------|
-| `profiles_index.faiss` | Vector index for similarity search |
-| `embeddings.npy` | Raw embedding vectors |
-| `user_ids.json` | Profile ID to index mapping |
-
----
-
-# Phase 2: Query Generation
+# Phase 1: Query Generation
 
 ## Purpose
 Generate diverse, realistic search queries that represent actual user search behavior.
@@ -248,9 +112,6 @@ Total queries: 4,500 × ~11 queries per profile set = 50,000+ queries
 | **Easy** | Single attribute match | "Developer in Bangalore" |
 | **Medium** | Multiple attribute match | "Senior Python Developer with ML experience" |
 | **Hard** | Complex semantic understanding | "High-energy person who loves hiking and can lead tech teams" |
-
-<details>
-<summary>🐍 Phase 2: Python Implementation (Click to Expand)</summary>
 
 ```python
 import json
@@ -348,12 +209,8 @@ else:
 
 # Total batches needed: 45000 / 10 = 4500 batches
 ```
-</details>
 
 ## AI Prompt Template (Query Generation)
-
-<details>
-<summary>🤖 Phase 2: AI Prompt Template (Click to Expand)</summary>
 
 ```
 You are a Search Query Generator for a professional discovery platform.
@@ -516,12 +373,12 @@ Mix clean, structured, and informal phrasing
 Cover at least 6 different query types (A–J)
 Include Easy, Medium, and Hard difficulty levels
 
-DON’T:-
-Don’t use real names
-Don’t copy profile text verbatim
-Don’t create impossible or unsupported constraints
-Don’t reuse sentence structures
-Don’t limit queries only to technical skills
+DON'T:-
+Don't use real names
+Don't copy profile text verbatim
+Don't create impossible or unsupported constraints
+Don't reuse sentence structures
+Don't limit queries only to technical skills
 
 OUTPUT FORMAT (STRICT JSON ARRAY) :-
 Return exactly 11 queries in the following format:-
@@ -542,7 +399,6 @@ Return exactly 11 queries in the following format:-
 PROFILES TO ANALYZE :-
 [... 10 COMPLETE PROFILES DATA HERE ...]
 ```
-</details>
 
 ## Output Format Example
 
@@ -566,6 +422,138 @@ PROFILES TO ANALYZE :-
 
 ---
 
+# Phase 2: Vector Database Creation
+
+## Purpose
+Convert all profile data into high-dimensional vector representations for fast semantic similarity search.
+
+## Technology Stack
+- **Embedding Model:** Sentence Transformers (all-MiniLM-L6-v2)
+- **Vector Database:** FAISS (Facebook AI Similarity Search)
+- **Language:** Python
+
+## Process
+
+1. Load all 45,000 profiles from JSON
+2. Extract all searchable fields from each profile:
+   - Personal info (name, gender, age, languages)
+   - Location (city, state, country)
+   - Professional identity (occupation, industry, seniority, titles)
+   - Expertise (skills, abilities, knowledge domains)
+   - Work environment (activities, context)
+   - Availability (engagement status, collaboration style)
+   - Lifestyle (travel style, social vibe)
+   - Interests (hobbies, learning goals)
+   - Semantic summary and tags
+3. Concatenate all fields into searchable text
+4. Generate 384-dimensional embedding vector for each profile
+5. Build FAISS index for efficient similarity search
+6. Save index and mappings to disk
+
+## Python Implementation
+
+```python
+import json
+from sentence_transformers import SentenceTransformer
+import faiss
+import numpy as np
+from tqdm import tqdm
+
+# Load profiles
+with open('SyntheticProfilesPersona_Discovery_45k_profiles.json', 'r', encoding='utf-8') as f:
+    profiles = json.load(f)
+
+# Load embedding model
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+def profile_to_text(p):
+    """Extract all searchable fields from profile"""
+    parts = []
+    
+    # Personal Info
+    pii = p.get('pii', {})
+    parts.append(pii.get('name', ''))
+    parts.append(pii.get('gender', ''))
+    location = pii.get('location', {})
+    parts.extend([location.get('city', ''), location.get('state', ''), 
+                  location.get('neighborhood', ''), location.get('country', '')])
+    
+    # Demographics
+    demo = p.get('demographics', {})
+    parts.append(str(demo.get('age', '')))
+    parts.extend(demo.get('languages', []))
+    
+    # Professional Identity
+    prof = p.get('professional_identity', {})
+    parts.append(prof.get('occupation', ''))
+    parts.extend(prof.get('professional_titles', []))
+    parts.extend(prof.get('alternate_titles', []))
+    parts.append(prof.get('industry', ''))
+    parts.append(prof.get('seniority', ''))
+    parts.append(prof.get('mission_statement', ''))
+    
+    # Expertise
+    exp = p.get('expertise_taxonomy', {})
+    parts.extend(exp.get('skills', []))
+    parts.extend(exp.get('abilities', []))
+    parts.extend(exp.get('knowledge_domains', []))
+    parts.extend(exp.get('related_occupations', []))
+    
+    # Work Environment
+    work = p.get('work_environment_context', {})
+    parts.extend(work.get('work_activities', []))
+    parts.extend(work.get('work_context', []))
+    
+    # Discovery Intent
+    disc = p.get('discovery_intent', {})
+    parts.append(disc.get('engagement_status', ''))
+    parts.append(disc.get('availability_pattern', ''))
+    parts.append(disc.get('collaboration_style', ''))
+    
+    # Lifestyle
+    life = p.get('lifestyle', {})
+    parts.append(life.get('travel_style', ''))
+    parts.append(life.get('social_vibe', ''))
+    
+    # Interests
+    interests = p.get('interests', {})
+    parts.extend(interests.get('hobbies', []))
+    parts.extend(interests.get('learning_goals', []))
+    
+    # Search Optimization
+    search = p.get('search_optimization', {})
+    parts.append(search.get('semantic_summary', ''))
+    parts.extend([tag.replace('#', '') for tag in search.get('tags', [])])
+    
+    return ' '.join([str(x) for x in parts if x])
+
+# Create embeddings
+profile_texts = [profile_to_text(p) for p in tqdm(profiles)]
+embeddings = model.encode(profile_texts, show_progress_bar=True)
+
+# Build FAISS index
+dimension = embeddings.shape[1]
+index = faiss.IndexFlatL2(dimension)
+index.add(embeddings.astype('float32'))
+
+# Save outputs
+faiss.write_index(index, 'profiles_index.faiss')
+np.save('embeddings.npy', embeddings)
+
+user_ids = [p['user_id'] for p in profiles]
+with open('user_ids.json', 'w') as f:
+    json.dump(user_ids, f)
+```
+
+## Output Files
+| File | Description |
+|------|-------------|
+| `profiles_index.faiss` | Vector index for similarity search |
+| `embeddings.npy` | Raw embedding vectors |
+| `user_ids.json` | Profile ID to index mapping |
+
+---
+
 # Phase 3: Candidate Retrieval
 
 ## Purpose
@@ -579,9 +567,6 @@ For each generated query, retrieve the 50 most semantically similar profiles fro
 4. Return top 50 candidates ranked by similarity
 
 ## Python Implementation
-
-<details>
-<summary>🐍 Phase 3: Python Implementation (Click to Expand)</summary>
 
 ```python
 import json
@@ -627,7 +612,6 @@ for r in results[:5]:
     p = r['profile']
     print(f"  {r['rank']}. {r['user_id']} | {p['professional_identity']['occupation']}")
 ```
-</details>
 
 ## Performance
 - **Latency:** 50-100ms per query
@@ -662,9 +646,6 @@ Apply human-quality reasoning to rank candidate profiles and generate relevance 
 
 ## AI Prompt Template
 
-<details>
-<summary>🤖 Phase 4: AI Prompt Template (Click to Expand)</summary>
-
 ```
 You are a search quality evaluator.
 
@@ -696,7 +677,6 @@ Output JSON format:
   "notes": "..."
 }
 ```
-</details>
 
 ## Output Format
 
@@ -733,8 +713,8 @@ Output JSON format:
 
 | Phase | Input | Process | Output |
 |-------|-------|---------|--------|
-| **Phase 1** | 45k profiles JSON | Embedding generation | Vector database |
-| **Phase 2** | 10 sequential profiles | AI query generation | 1 query + metadata |
+| **Phase 1** | 10 sequential profiles | AI query generation | 1 query + metadata |
+| **Phase 2** | 45k profiles JSON | Embedding generation | Vector database |
 | **Phase 3** | 1 query | Vector similarity search | 50 candidate profiles |
 | **Phase 4** | 50 profiles | AI relevance ranking | Top 10 ranked results |
 
@@ -748,10 +728,10 @@ This project involves processing **45,000 complex JSON profiles** (135 MB raw da
 
 | Stage | Operation | Resource Intensity |
 |-------|-----------|-------------------|
-| **Phase 1** | Vector Embedding Generation | Very High (CPU + RAM) |
-| **Phase 1** | FAISS Index Construction | High (RAM) |
+| **Phase 2** | Vector Embedding Generation | Very High (CPU + RAM) |
+| **Phase 2** | FAISS Index Construction | High (RAM) |
 | **Phase 3** | Vector Similarity Search (50k queries) | High (RAM + CPU) |
-| **Phase 2 & 4** | AI API Processing | Continuous (Network + CPU) |
+| **Phase 1 & 4** | AI API Processing | Continuous (Network + CPU) |
 
 ### Detailed Memory Requirements
 
@@ -760,7 +740,7 @@ This project involves processing **45,000 complex JSON profiles** (135 MB raw da
 | Load 45k profiles into memory | 4-6 GB | Continuous |
 | Sentence Transformer model loaded | 2-3 GB | Continuous |
 | FAISS index in memory | 2-3 GB | Continuous |
-| Embedding generation buffer | 3-4 GB | During Phase 1 |
+| Embedding generation buffer | 3-4 GB | During Phase 2 |
 | Query processing buffer | 2-3 GB | During Phase 3 |
 | **Total Peak Usage** | **15-20 GB** | Multiple phases |
 
@@ -794,9 +774,9 @@ This project involves processing **45,000 complex JSON profiles** (135 MB raw da
 
 | Phase | Duration | RAM Needed | CPU Needed |
 |-------|----------|------------|------------|
-| Phase 1 (Embeddings) | 4-8 hours | 15-20 GB | 100% |
+| Phase 2 (Embeddings) | 4-8 hours | 15-20 GB | 100% |
 | Phase 3 (Search × 50k) | 2-4 hours | 8-10 GB | 80-100% |
-| Phase 2 & 4 (AI Ranking) | 2-3 weeks | 8-10 GB | 50-70% |
+| Phase 1 & 4 (AI Ranking) | 2-3 weeks | 8-10 GB | 50-70% |
 | **Total Continuous** | **3-4 weeks** | **8-20 GB** | **High** |
 
 **System will be unusable for other tasks during processing.**
@@ -819,8 +799,9 @@ For reliable, timely execution, **dedicated server infrastructure** is required:
 
 | Phase | Duration | Notes |
 |-------|----------|-------|
-| Phase 1 | 4-6 hours | One-time vector database setup |
-| Phase 2-4 | 2-3 weeks | 50k+ queries with ranking |
+| Phase 1 | 2-3 weeks | AI query generation (50k+ queries) |
+| Phase 2 | 4-6 hours | One-time vector database setup |
+| Phase 3-4 | 1-2 weeks | Retrieval + ranking |
 | **Total** | **3-4 weeks** | Depends on infrastructure and API limits |
 
 ---
@@ -850,4 +831,3 @@ Each test case contains:
 ---
 
 *Document prepared for implementation planning and resource allocation.*
-
